@@ -151,6 +151,119 @@ const quotes = [
   '健身不是为了取悦谁，而是为了成为更好的自己。'
 ];
 
+// ================= 天气功能 =================
+// 默认城市：大连（用户所在城市），可按需修改
+const DEFAULT_CITY = { name: '大连', latitude: 38.9140, longitude: 121.6147 };
+
+// WMO 天气代码映射（图标 + 中文描述）
+const weatherCodeMap = {
+  0:  { icon: '☀️', desc: '晴' },
+  1:  { icon: '🌤️', desc: '大部晴朗' },
+  2:  { icon: '⛅', desc: '局部多云' },
+  3:  { icon: '☁️', desc: '阴' },
+  45: { icon: '🌫️', desc: '雾' },
+  48: { icon: '🌫️', desc: '雾凇' },
+  51: { icon: '🌦️', desc: '小毛毛雨' },
+  53: { icon: '🌦️', desc: '毛毛雨' },
+  55: { icon: '🌧️', desc: '大毛毛雨' },
+  56: { icon: '🌧️', desc: '冻毛毛雨' },
+  57: { icon: '🌧️', desc: '强冻毛毛雨' },
+  61: { icon: '🌧️', desc: '小雨' },
+  63: { icon: '🌧️', desc: '中雨' },
+  65: { icon: '⛈️', desc: '大雨' },
+  66: { icon: '🌧️', desc: '冻雨' },
+  67: { icon: '🌧️', desc: '强冻雨' },
+  71: { icon: '🌨️', desc: '小雪' },
+  73: { icon: '🌨️', desc: '中雪' },
+  75: { icon: '❄️', desc: '大雪' },
+  77: { icon: '🌨️', desc: '雪粒' },
+  80: { icon: '🌦️', desc: '阵雨' },
+  81: { icon: '🌧️', desc: '中阵雨' },
+  82: { icon: '⛈️', desc: '强阵雨' },
+  85: { icon: '🌨️', desc: '阵雪' },
+  86: { icon: '❄️', desc: '强阵雪' },
+  95: { icon: '⛈️', desc: '雷暴' },
+  96: { icon: '⛈️', desc: '雷暴伴冰雹' },
+  99: { icon: '⛈️', desc: '强雷暴伴冰雹' }
+};
+
+// 根据天气给出训练建议
+function getWeatherTip(code, temp, humidity, windSpeed) {
+  const tips = [];
+  // 温度建议
+  if (temp >= 32) tips.push('气温较高，建议选择清晨或傍晚训练，注意补水防暑');
+  else if (temp >= 26) tips.push('天气较热，训练中少量多次补水，适当降低强度');
+  else if (temp >= 18) tips.push('气温适宜，非常适合训练，注意热身充分');
+  else if (temp >= 10) tips.push('气温偏低，务必充分热身，注意关节保暖');
+  else if (temp >= 0) tips.push('天气寒冷，室内训练为宜，做好保暖防感冒');
+  else tips.push('严寒天气，建议室内训练，注意防寒保暖');
+
+  // 降水/天气建议
+  const rainyCodes = [51,53,55,56,57,61,63,65,66,67,80,81,82];
+  const snowyCodes = [71,73,75,77,85,86];
+  const stormCodes = [95,96,99];
+  if (stormCodes.includes(code)) tips.push('有雷暴，切勿在户外训练，安全第一');
+  else if (snowyCodes.includes(code)) tips.push('有降雪，路面湿滑，优先选择室内训练');
+  else if (rainyCodes.includes(code)) tips.push('有降雨，建议室内训练，外出注意防滑');
+
+  // 风力建议
+  if (windSpeed >= 30) tips.push('风力较大，户外训练注意安全，避免高风险动作');
+
+  // 湿度建议
+  if (humidity >= 85) tips.push('湿度较高，体感闷热，注意透气排汗');
+
+  if (tips.length === 0) tips.push('天气状况良好，适合今日训练');
+  return tips.join('；') + '。';
+}
+
+// 加载并渲染天气
+async function loadWeather() {
+  const card = document.getElementById('weatherCard');
+  try {
+    const { latitude, longitude, name } = DEFAULT_CITY;
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}` +
+      `&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m` +
+      `&timezone=auto&forecast_days=1`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('天气请求失败');
+    const data = await res.json();
+    const cur = data.current;
+    const codeInfo = weatherCodeMap[cur.weather_code] || { icon: '🌡️', desc: '未知' };
+    const temp = Math.round(cur.temperature_2m);
+    const humidity = Math.round(cur.relative_humidity_2m);
+    const wind = Math.round(cur.wind_speed_10m);
+    const tip = getWeatherTip(cur.weather_code, temp, humidity, wind);
+
+    card.innerHTML = `
+      <div class="weather-main">
+        <div class="weather-left">
+          <div class="weather-icon-wrap">${codeInfo.icon}</div>
+          <div class="weather-info">
+            <div class="city-name"><span class="location-dot">📍</span>${name}</div>
+            <div class="temp-line">
+              <span class="temp">${temp}°</span>
+              <span class="weather-desc">${codeInfo.desc}</span>
+            </div>
+          </div>
+        </div>
+        <div class="weather-right">
+          <div class="weather-stat">
+            <div class="stat-label">湿度</div>
+            <div class="stat-value">${humidity}%</div>
+          </div>
+          <div class="weather-stat">
+            <div class="stat-label">风速</div>
+            <div class="stat-value">${wind} km/h</div>
+          </div>
+        </div>
+      </div>
+      <div class="weather-tip"><strong>训练建议：</strong>${escapeHtml(tip)}</div>
+    `;
+  } catch (err) {
+    card.innerHTML = `<div class="weather-error">⚠️ 天气数据暂时无法获取，请检查网络后刷新页面</div>`;
+  }
+}
+
 // ================= 工具函数 =================
 function getTodayIndex() {
   // JS: 0=周日, 1=周一 ... 6=周六
@@ -271,9 +384,13 @@ function nextQuote() {
 document.addEventListener('DOMContentLoaded', () => {
   renderToday();
   renderQuote();
+  loadWeather();
 
   // 每 8 秒自动切换鼓励语
   setInterval(nextQuote, 8000);
+
+  // 每 10 分钟刷新一次天气
+  setInterval(loadWeather, 10 * 60 * 1000);
 
   // 手动切换按钮
   document.getElementById('quoteShuffle').addEventListener('click', nextQuote);

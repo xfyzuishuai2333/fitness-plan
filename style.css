@@ -391,6 +391,124 @@ body {
   line-height: 1.6;
 }
 
+/* ================= 当日天气 ================= */
+.weather-section { margin-bottom: 24px; }
+
+.weather-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 20px;
+  padding: 20px 24px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  animation: cardIn 0.5s ease both;
+}
+
+.weather-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  padding: 10px 0;
+}
+
+.weather-spinner {
+  width: 22px;
+  height: 22px;
+  border: 2.5px solid rgba(255, 107, 53, 0.2);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.weather-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.weather-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.weather-icon-wrap {
+  width: 72px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(255,107,53,0.2), rgba(247,147,30,0.2));
+  border-radius: 18px;
+  border: 1px solid rgba(255, 107, 53, 0.25);
+  font-size: 2.6rem;
+}
+
+.weather-info .city-name {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.weather-info .city-name .location-dot { color: var(--accent); }
+
+.weather-info .temp-line {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 4px 0 2px;
+}
+.weather-info .temp {
+  font-size: 2.6rem;
+  font-weight: 800;
+  background: linear-gradient(120deg, #ff6b35, #f7931e, #ffd700);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1;
+}
+.weather-info .weather-desc {
+  font-size: 1rem;
+  color: #fff;
+  font-weight: 600;
+}
+
+.weather-right {
+  display: flex;
+  gap: 20px;
+}
+.weather-stat {
+  text-align: center;
+}
+.weather-stat .stat-label { font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 4px; }
+.weather-stat .stat-value { font-size: 1.05rem; font-weight: 700; color: #fff; }
+
+.weather-tip {
+  margin-top: 16px;
+  padding: 12px 16px;
+  background: rgba(255, 107, 53, 0.1);
+  border: 1px solid rgba(255, 107, 53, 0.25);
+  border-radius: 12px;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+.weather-tip strong { color: var(--accent2); }
+
+.weather-error {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  padding: 14px 0;
+}
+
 /* ================= 响应式 ================= */
 @media (max-width: 600px) {
   .overview-card { flex-direction: column; align-items: stretch; }
@@ -398,4 +516,6 @@ body {
   .time-box { justify-content: center; }
   .equip-stats { grid-template-columns: repeat(3, 1fr); }
   .quote-wrapper { padding: 20px 48px; }
+  .weather-main { flex-direction: column; align-items: stretch; }
+  .weather-right { justify-content: space-around; }
 }
