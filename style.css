@@ -1,0 +1,401 @@
+/* ================= 全局基础 ================= */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg-start: #1a0f0a;
+  --bg-mid: #2d1810;
+  --bg-end: #1a1a2e;
+  --card-bg: rgba(255, 255, 255, 0.06);
+  --card-border: rgba(255, 255, 255, 0.12);
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --accent: #ff6b35;
+  --accent2: #f7931e;
+  --accent-glow: rgba(255, 107, 53, 0.4);
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: linear-gradient(135deg, var(--bg-start) 0%, var(--bg-mid) 50%, var(--bg-end) 100%);
+  min-height: 100vh;
+  color: var(--text-primary);
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* ================= 背景装饰光斑 ================= */
+.bg-decoration { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.35;
+  animation: floatBlob 20s ease-in-out infinite;
+}
+.blob-1 { width: 420px; height: 420px; background: #ff6b35; top: -120px; left: -100px; }
+.blob-2 { width: 500px; height: 500px; background: #f7931e; bottom: -150px; right: -120px; animation-delay: -7s; }
+.blob-3 { width: 350px; height: 350px; background: #7c5cff; top: 45%; left: 45%; animation-delay: -14s; }
+
+@keyframes floatBlob {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(50px, -50px) scale(1.1); }
+  66% { transform: translate(-30px, 40px) scale(0.95); }
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 24px 60px;
+}
+
+/* ================= 标题（艺术字） ================= */
+.header { text-align: center; margin-bottom: 28px; }
+
+.art-title {
+  font-size: clamp(2.2rem, 6vw, 4rem);
+  font-weight: 900;
+  letter-spacing: 4px;
+  background: linear-gradient(120deg, #ff6b35 0%, #f7931e 30%, #ffd700 60%, #ff6b35 100%);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientShift 6s ease infinite;
+  text-shadow: 0 0 80px rgba(255, 107, 53, 0.3);
+  filter: drop-shadow(0 4px 20px rgba(255, 107, 53, 0.3));
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.subtitle {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  margin-top: 10px;
+  letter-spacing: 2px;
+}
+
+.date-bar {
+  margin-top: 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--card-bg);
+  padding: 8px 18px;
+  border-radius: 20px;
+  border: 1px solid var(--card-border);
+  backdrop-filter: blur(10px);
+}
+.date-bar #todayLabel { color: var(--accent); font-weight: 600; }
+.date-bar .date-text { color: var(--text-secondary); font-size: 0.9rem; }
+.date-bar .day-tag {
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: #fff;
+  padding: 2px 10px;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+/* ================= 鼓励语滚动区 ================= */
+.quote-section { margin-bottom: 28px; }
+
+.quote-wrapper {
+  position: relative;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 24px 56px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 18px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.quote-viewport {
+  overflow: hidden;
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quote-track { width: 100%; text-align: center; }
+
+.quote-item {
+  font-size: clamp(1.05rem, 2.5vw, 1.4rem);
+  font-weight: 700;
+  line-height: 1.6;
+  background: linear-gradient(120deg, #ffd700, #ff6b35, #f7931e, #ff6b9d, #ffd700);
+  background-size: 300% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: quoteGradient 5s linear infinite;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  filter: drop-shadow(0 2px 12px rgba(255, 107, 53, 0.35));
+}
+.quote-item.active { opacity: 1; transform: translateY(0); }
+
+@keyframes quoteGradient {
+  0% { background-position: 0% center; }
+  100% { background-position: 300% center; }
+}
+
+.quote-control {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.btn-shuffle {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--card-border);
+  color: #fff;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+}
+.btn-shuffle:hover { background: var(--accent); transform: rotate(180deg); }
+
+/* ================= 当日训练概览 ================= */
+.overview-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 20px;
+  padding: 24px;
+  backdrop-filter: blur(12px);
+  margin-bottom: 28px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.overview-left { display: flex; align-items: center; gap: 16px; }
+.muscle-icon {
+  font-size: 3rem;
+  width: 72px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(255,107,53,0.25), rgba(247,147,30,0.25));
+  border-radius: 18px;
+  border: 1px solid rgba(255, 107, 53, 0.3);
+}
+.muscle-group {
+  font-size: 1.6rem;
+  font-weight: 800;
+  background: linear-gradient(120deg, #ff6b35, #f7931e);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.train-type {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-top: 4px;
+}
+
+.overview-right { flex-shrink: 0; }
+.time-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255, 107, 53, 0.12);
+  border: 1px solid rgba(255, 107, 53, 0.3);
+  padding: 12px 18px;
+  border-radius: 14px;
+  color: var(--accent);
+}
+.time-label { font-size: 0.75rem; color: var(--text-secondary); }
+.time-value { font-weight: 700; color: #fff; }
+
+/* ================= 通用区块 ================= */
+.section { margin-bottom: 32px; }
+.section-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.title-icon { font-size: 1.4rem; }
+
+/* ================= 器械训练列表 ================= */
+.equipment-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.equip-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  padding: 18px;
+  backdrop-filter: blur(12px);
+  transition: transform 0.3s, box-shadow 0.3s;
+  animation: cardIn 0.5s ease both;
+}
+.equip-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.3);
+  border-color: rgba(255, 107, 53, 0.4);
+}
+
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.equip-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.equip-icon {
+  font-size: 1.5rem;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(255,107,53,0.2), rgba(247,147,30,0.2));
+  border-radius: 12px;
+  flex-shrink: 0;
+}
+.equip-name { font-size: 1.05rem; font-weight: 700; }
+
+.equip-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.stat-box {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  padding: 10px 6px;
+  text-align: center;
+}
+.stat-label { font-size: 0.72rem; color: var(--text-secondary); margin-bottom: 4px; }
+.stat-value { font-size: 1.05rem; font-weight: 700; color: var(--accent2); }
+
+/* ================= 三餐饮食 ================= */
+.meal-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.meal-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  padding: 18px;
+  backdrop-filter: blur(12px);
+  animation: cardIn 0.5s ease both;
+}
+
+.meal-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--card-border);
+}
+.meal-emoji { font-size: 1.8rem; }
+.meal-title { font-size: 1.1rem; font-weight: 700; }
+.meal-time { font-size: 0.78rem; color: var(--text-secondary); }
+
+.meal-items { list-style: none; }
+.meal-items li {
+  padding: 6px 0;
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.meal-items li::before {
+  content: '•';
+  color: var(--accent);
+  font-weight: bold;
+}
+
+/* ================= 训练小贴士 ================= */
+.tips-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  padding: 20px;
+  backdrop-filter: blur(12px);
+  line-height: 1.8;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+.tips-card strong { color: var(--accent2); }
+
+/* ================= 一周总览 ================= */
+.week-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 10px;
+}
+
+.day-cell {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+  padding: 14px 10px;
+  text-align: center;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s;
+}
+.day-cell.today {
+  border-color: var(--accent);
+  box-shadow: 0 0 20px rgba(255, 107, 53, 0.3);
+  background: rgba(255, 107, 53, 0.12);
+}
+.day-name { font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 6px; }
+.day-cell.today .day-name { color: var(--accent); font-weight: 700; }
+.day-muscle { font-size: 0.9rem; font-weight: 700; color: #fff; }
+.day-emoji { font-size: 1.3rem; margin-bottom: 4px; }
+
+/* ================= 页脚 ================= */
+.footer {
+  text-align: center;
+  margin-top: 40px;
+  padding-top: 24px;
+  border-top: 1px solid var(--card-border);
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  line-height: 1.6;
+}
+
+/* ================= 响应式 ================= */
+@media (max-width: 600px) {
+  .overview-card { flex-direction: column; align-items: stretch; }
+  .overview-right { width: 100%; }
+  .time-box { justify-content: center; }
+  .equip-stats { grid-template-columns: repeat(3, 1fr); }
+  .quote-wrapper { padding: 20px 48px; }
+}

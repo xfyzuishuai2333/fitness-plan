@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>四分化健身计划 · 每日训练指南</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- 背景装饰 -->
+  <div class="bg-decoration">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+
+  <div class="container">
+    <!-- 顶部标题 -->
+    <header class="header">
+      <h1 class="art-title">四分化健身计划</h1>
+      <p class="subtitle">每天一个部位 · 科学增肌塑形 · 七天循环</p>
+      <div class="date-bar">
+        <span id="todayLabel">今天</span>
+        <span class="date-text" id="todayDate"></span>
+        <span class="day-tag" id="dayTag"></span>
+      </div>
+    </header>
+
+    <!-- 鼓励语滚动展示区 -->
+    <section class="quote-section">
+      <div class="quote-wrapper">
+        <div class="quote-viewport">
+          <div class="quote-track" id="quoteTrack"></div>
+        </div>
+        <div class="quote-control">
+          <button id="quoteShuffle" class="btn-shuffle" title="换一句">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="16 3 21 3 21 8"></polyline>
+              <line x1="4" y1="20" x2="21" y2="3"></line>
+              <polyline points="21 16 21 21 16 21"></polyline>
+              <line x1="15" y1="15" x2="21" y2="21"></line>
+              <line x1="4" y1="4" x2="9" y2="9"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 当日训练概览 -->
+    <section class="overview-card">
+      <div class="overview-left">
+        <div class="muscle-icon" id="muscleIcon">💪</div>
+        <div>
+          <h2 class="muscle-group" id="muscleGroup">胸 + 三头肌</h2>
+          <p class="train-type" id="trainType">训练日</p>
+        </div>
+      </div>
+      <div class="overview-right">
+        <div class="time-box">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          <div>
+            <div class="time-label">推荐训练时间</div>
+            <div class="time-value" id="recTime">上午 9:00 - 10:30</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 器械训练区 -->
+    <section class="section">
+      <h3 class="section-title">
+        <span class="title-icon">🏋️</span>今日器械训练
+      </h3>
+      <div class="equipment-list" id="equipmentList"></div>
+    </section>
+
+    <!-- 三餐饮食区 -->
+    <section class="section">
+      <h3 class="section-title">
+        <span class="title-icon">🍱</span>今日健康饮食
+      </h3>
+      <div class="meal-grid" id="mealGrid"></div>
+    </section>
+
+    <!-- 训练小贴士 -->
+    <section class="section">
+      <h3 class="section-title">
+        <span class="title-icon">💡</span>训练小贴士
+      </h3>
+      <div class="tips-card" id="tipsCard"></div>
+    </section>
+
+    <!-- 一周总览 -->
+    <section class="section">
+      <h3 class="section-title">
+        <span class="title-icon">📅</span>一周计划总览
+      </h3>
+      <div class="week-grid" id="weekGrid"></div>
+    </section>
+
+    <footer class="footer">
+      <p>四分化健身计划 · 仅供参考，请根据自身情况调整 · 保证充足睡眠与蛋白质摄入</p>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
